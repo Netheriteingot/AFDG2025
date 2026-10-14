@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frankenstein Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            overflow: hidden;
+        }
+    </style>
+    <script src="frankenstein.js"></script>
+</head>
+<body>
+    <script>
+        (async function() {
+            const puppet = new Frankenstein();
+
+            // Load all parts
+            await puppet.loadPart("head", "pics/head.png", "pics/head.png.json");
+            await puppet.loadPart("body", "pics/body.png", "pics/body.png.json");
+            await puppet.loadPart("arm1", "pics/arm1.png", "pics/arm1.png.json");
+            await puppet.loadPart("arm1_mirror", "pics/arm1_mirror.png", "pics/arm1_mirror.png.json");
+            await puppet.loadPart("arm2", "pics/arm2.png", "pics/arm2.png.json");
+            await puppet.loadPart("arm2_mirror", "pics/arm2_mirror.png", "pics/arm2_mirror.png.json");
+            await puppet.loadPart("leg1", "pics/leg1.png", "pics/leg1.png.json");
+            await puppet.loadPart("leg1_mirror", "pics/leg1_mirror.png", "pics/leg1_mirror.png.json");
+            await puppet.loadPart("leg2", "pics/leg2.png", "pics/leg2.png.json");
+            await puppet.loadPart("leg2_mirror", "pics/leg2_mirror.png", "pics/leg2_mirror.png.json");
+
+            // Set rotations
+            // Left side (no _mirror): absolute 10 rad/s
+            puppet.setRotation("arm1", "absolute", () => (Date.now() / 100) * 200 * Math.PI / 180);
+            puppet.setRotation("arm2", "absolute", () => (Date.now() / 100) * 200 * Math.PI / 180);
+            puppet.setRotation("leg1", "absolute", () => (Date.now() / 100) * 200 * Math.PI / 180);
+            puppet.setRotation("leg2", "absolute", () => (Date.now() / 100) * 200 * Math.PI / 180);
+
+            // Right side (_mirror): relative 10 rad/s
+            puppet.setRotation("arm1_mirror", "relative", () => (Date.now() / 100) * 200 * Math.PI / 180);
+            puppet.setRotation("arm2_mirror", "relative", () => (Date.now() / 100) * 200 * Math.PI / 180);
+            puppet.setRotation("leg1_mirror", "relative", () => (Date.now() / 100) * 200 * Math.PI / 180);
+            puppet.setRotation("leg2_mirror", "relative", () => (Date.now() / 100) * 200 * Math.PI / 180);
+
+            // Attach to body
+            puppet.attachTo(document.body);
+
+            // Enable debug mode to show joint markers
+            // puppet.setDebugMode(true);
+
+            // Animation loop
+            function animate() {
+                // Slow vertical oscillation
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                const yOffset = Math.sin(Date.now() / 1000) * 100;
+
+                puppet.setPosition(centerX, centerY + yOffset);
+                puppet.update();
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        })();
+    </script>
+</body>
+</html>
