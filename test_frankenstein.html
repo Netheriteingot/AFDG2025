@@ -17,7 +17,7 @@
 <body>
     <script>
         (async function() {
-            const puppet = new Frankenstein();
+            const puppet = Frankenstein.humanoid();
 
             // Load all parts
             await puppet.loadPart("head", "pics/head.png", "pics/head.png.json");
